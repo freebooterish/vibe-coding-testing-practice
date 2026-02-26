@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SCENARIO_KEYS } from '../mocks/handlers';
 import { TOKEN_KEY } from '../api/axiosInstance';
@@ -12,20 +12,11 @@ type DelayValue = '0' | '500' | '1000';
 export const DevPanel: React.FC = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
-    const [loginScenario, setLoginScenario] = useState<LoginScenario>('success');
-    const [meScenario, setMeScenario] = useState<MeScenario>('success');
-    const [productsScenario, setProductsScenario] = useState<ProductsScenario>('success');
-    const [userRole, setUserRole] = useState<UserRole>('admin');
-    const [delay, setDelay] = useState<DelayValue>('0');
-
-    // Load initial values from localStorage
-    useEffect(() => {
-        setLoginScenario((localStorage.getItem(SCENARIO_KEYS.login) as LoginScenario) || 'success');
-        setMeScenario((localStorage.getItem(SCENARIO_KEYS.me) as MeScenario) || 'success');
-        setProductsScenario((localStorage.getItem(SCENARIO_KEYS.products) as ProductsScenario) || 'success');
-        setUserRole((localStorage.getItem(SCENARIO_KEYS.userRole) as UserRole) || 'admin');
-        setDelay((localStorage.getItem(SCENARIO_KEYS.delay) as DelayValue) || '0');
-    }, []);
+    const [loginScenario, setLoginScenario] = useState<LoginScenario>(() => (localStorage.getItem(SCENARIO_KEYS.login) as LoginScenario) || 'success');
+    const [meScenario, setMeScenario] = useState<MeScenario>(() => (localStorage.getItem(SCENARIO_KEYS.me) as MeScenario) || 'success');
+    const [productsScenario, setProductsScenario] = useState<ProductsScenario>(() => (localStorage.getItem(SCENARIO_KEYS.products) as ProductsScenario) || 'success');
+    const [userRole, setUserRole] = useState<UserRole>(() => (localStorage.getItem(SCENARIO_KEYS.userRole) as UserRole) || 'admin');
+    const [delay, setDelay] = useState<DelayValue>(() => (localStorage.getItem(SCENARIO_KEYS.delay) as DelayValue) || '0');
 
     const handleLoginScenarioChange = (value: LoginScenario) => {
         setLoginScenario(value);
