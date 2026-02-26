@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v3
+      with:
+        version: 9
+        
+    - name: Install dependencies
+      run: pnpm install
+      
+    - name: Run ESLint
+      run: pnpm run lint
+      
+    - name: Run Tests with Coverage
+      run: pnpm run test:coverage
+
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: coverage/
+        retention-days: 14
+
+    - name: Upload HTML Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: html-test-report
+        path: html-report/
+        retention-days: 14
+
+    - name: Run Build
+      run: pnpm run build

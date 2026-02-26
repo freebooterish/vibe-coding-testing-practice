@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setToken(storedToken);
             setIsLoading(false);
             return true;
-        } catch (error) {
+        } catch {
             logout();
             setIsLoading(false);
             return false;
@@ -79,8 +79,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, [logout]);
 
     // Check auth on mount
+    // Check auth on mount
     useEffect(() => {
-        checkAuth();
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        checkAuth().catch(() => {
+            // Ignore errors
+        });
     }, [checkAuth]);
 
     const value: AuthContextType = {
@@ -98,6 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);
     if (context === undefined) {
